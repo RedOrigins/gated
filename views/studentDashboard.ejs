@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gated</title>
+  </head>
+  <body>
+    <h3>Student Dashboard</h3>
+
+    <form action="/logout" method="post">
+      <button type="submit">Log Out</button>
+    </form>
+
+    <% results.forEach(result => { %>
+    <hr />
+    <a href="/tasks/<%= result.task%>" target="_blank"> <%= result %> </a>
+    <% }) %>
+  </body>
+</html>

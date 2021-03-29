@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="UTF-8" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+      integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha512-M5KW3ztuIICmVIhjSqXe01oV2bpe248gOxqmlcYrEzAvws7Pw3z6BK0iGbrwvdrUQUhi3eXgtxp5I8PDo9YfjQ=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+      integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg=="
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+      integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/select2-bootstrap4-theme.min.css" />
+    <link rel="icon" href="/images/arctic_logo.png" />
+    <title>Gated</title>
+  </head>
+  <body class="h-100">
+    <div class="container h-100">
+      <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-10 col-md-10 col-lg-6 card card-body bg-light">
+          <form>
+            <span>
+              <h1>Login</h1>
+            </span>
+
+            <div class="form-group">
+              <label for="school">School:</label>
+              <select
+                required
+                name="school"
+                id="school-field"
+                class="w-100"
+              ></select>
+            </div>
+
+            <div class="form-group">
+              <label for="name">Username:</label>
+              <input
+                required
+                type="text"
+                class="form-control name"
+                placeholder="Username..."
+                id="name-field"
+                name="name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input
+                required
+                type="password"
+                class="form-control password"
+                placeholder="Password..."
+                id="password-field"
+                name="password"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $("select").select2({
+        theme: "bootstrap4",
+        placeholder: "School...",
+        ajax: {
+          url: "/schools/select",
+          dataType: "json",
+          delay: 250,
+        },
+        minimumInputLength: 1,
+      });
+
+      $("form").submit((e) => {
+        e.preventDefault();
+        const school = $("#school-field").val();
+        const name = $("#name-field").val();
+        const password = $("#password-field").val();
+        $.ajax({
+          type: "post",
+          url: "/login",
+          data: JSON.stringify({
+            school,
+            name,
+            password,
+          }),
+          contentType: "application/json; charset=utf-8",
+          dataType: "text",
+          success: (data) => {
+            location.reload();
+          },
+          error: (errMsg) => {
+            console.error(errMsg);
+            $("#alert-box").remove();
+
+            const html = `
+            <div id="alert-box" class="alert alert-warning mt-3">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              Error loggin in.
+            </div>
+            `;
+            $("form").append(html);
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
